@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useReadContract, useWriteContract } from 'wagmi';
-import { formatUnits, parseUnits } from 'ethers/lib/utils';
+import { formatUnits, parseUnits } from 'ethers';
 import { useToast } from '../../components/ToastContext';
 import TokenABI from '@/abis/Token.json';
 import {
@@ -27,9 +27,12 @@ export default function TokenPage() {
     args: [address],
   });
 
-  const balance = balanceData
-    ? formatUnits(balanceData, TOKEN_DECIMALS)
-    : undefined;
+  const balance =
+    typeof balanceData === 'string' ||
+    typeof balanceData === 'number' ||
+    typeof balanceData === 'bigint'
+      ? formatUnits(balanceData, TOKEN_DECIMALS)
+      : undefined;
 
   const {
     writeContract: transferTokens,
