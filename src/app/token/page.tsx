@@ -21,7 +21,7 @@ export default function TokenPage() {
     isLoading,
     isError,
   } = useReadContract({
-    address: TOKEN_ADDRESS,
+    address: TOKEN_ADDRESS as `0x${string}`,
     abi: TokenABI,
     functionName: 'balanceOf',
     args: [address],
@@ -50,7 +50,7 @@ export default function TokenPage() {
   const handleTransfer = (to: string, amount: string) => {
     if (!to || !amount) return;
     transferTokens({
-      address: TOKEN_ADDRESS,
+      address: TOKEN_ADDRESS as `0x${string}`,
       abi: TokenABI,
       functionName: 'transfer',
       args: [to as any, parseUnits(amount, TOKEN_DECIMALS)],
@@ -60,7 +60,7 @@ export default function TokenPage() {
   const handleApprove = (spender: string, amount: string) => {
     if (!spender || !amount) return;
     approveTokens({
-      address: TOKEN_ADDRESS,
+      address: TOKEN_ADDRESS as `0x${string}`,
       abi: TokenABI,
       functionName: 'approve',
       args: [spender as any, parseUnits(amount, TOKEN_DECIMALS)],
