@@ -14,28 +14,26 @@ export default function ChallengesPage() {
   const { address, isConnected } = useAccount();
   const { addToast } = useToast();
   const queryClient = useQueryClient();
-  const { data: completions, isLoading, isError } = useQuery(
-    ['tasks', address],
-    () => fetch(`/api/tasks?userAddress=${address}`).then((res) => res.json()),
-    { enabled: isConnected }
-  );
-  const mutation = useMutation(
-    (taskId: string) =>
+  const { data: completions, isLoading, isError } = useQuery({
+    queryKey: ['tasks', address],
+    queryFn: () => fetch(`/api/tasks?userAddress=${address}`).then((res) => res.json()),
+    enabled: isConnected,
+  });
+  const mutation = useMutation({
+    mutationFn: (taskId: string) =>
       fetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userAddress: address, taskId }),
       }).then((res) => res.json()),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['tasks', address]);
-        addToast('Challenge completed', 'success');
-      },
-      onError: (error: any) => {
-        addToast(error?.message || 'Failed to complete challenge', 'error');
-      },
-    }
-  );
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks', address] });
+      addToast('Challenge completed', 'success');
+    },
+    onError: (error: any) => {
+      addToast(error?.message || 'Failed to complete challenge', 'error');
+    },
+  });
 
   if (!isConnected) {
     return (
@@ -75,7 +73,7 @@ export default function ChallengesPage() {
         >
           <span>{task.title}</span>
           <button
-            disabled={completedIds.includes(task.id) || mutation.isLoading}
+            disabled={completedIds.includes(task.id) || mutation.isPending}
             onClick={() => mutation.mutate(task.id)}
             className="px-3 py-1 bg-green-600 text-white rounded transition-colors duration-200 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
           >
