@@ -7,10 +7,10 @@ import { useToast } from '../../components/ToastContext';
 export default function LeaderboardPage() {
   const { isConnected } = useAccount();
   const { addToast } = useToast();
-  const { data: leaderboard, isLoading, isError } = useQuery(
-    ['leaderboard'],
-    () => fetch('/api/tasks?userAddress=all').then((res) => res.json())
-  );
+  const { data: leaderboard, isLoading, isError } = useQuery({
+    queryKey: ['leaderboard'],
+    queryFn: () => fetch('/api/tasks?userAddress=all').then((res) => res.json()),
+  });
 
   if (!isConnected) {
     return (
