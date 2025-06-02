@@ -1,9 +1,10 @@
-'use client';
-
 export default function Home() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
-      {/* Main content here */}
-    </main>
+    <div className="p-4">
+      <h1 className="text-3xl font-bold mb-4">Welcome to EcoCoin Space</h1>
+      <p className="text-lg">
+        Cultivate your virtual trees and earn EcoCoin rewards on Base L2.
+      </p>
+    </div>
   );
 }

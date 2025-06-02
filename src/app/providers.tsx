@@ -4,6 +4,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, http } from 'wagmi';
+import { ToastProvider } from '../components/ToastContext';
 import { base, baseSepolia } from 'wagmi/chains';
 
 // This is a placeholder WalletConnect Project ID. It must remain here to avoid build errors if the environment variable is not set yet.
@@ -19,17 +20,25 @@ const wagmiConfig = getDefaultConfig({
   }
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          modalSize="compact" // 'compact' | 'wide'
-        >
-          {children}
-        </RainbowKitProvider>
+        <ToastProvider>
+          <RainbowKitProvider modalSize="compact">
+            {children}
+          </RainbowKitProvider>
+        </ToastProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
